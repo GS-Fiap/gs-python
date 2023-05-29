@@ -1,21 +1,26 @@
 import re
 
+# Definindo as informações de acesso ao sistema:
 nome_usuario_salvo = ["Guilherme", "João", "Lucas", "Pedro", "Vinícius"]
 senha_sistema_salvo = "12345"
 
+# Definindo itens de exemplo no estoque:
 estoque = ["Uva", "13/07/2023", "125", "Suco de Laranja", "04/05/2023", "32", "Limão Verde", "31/12/2023", "204"]
 
 continuar = "sim"
 
+# Criando uma função para cada funcionalidade do sistema:
 def previsao_demanda():
     somatoria = 0
     nome_produto = input("\nMuito bem. Insira o nome do produto que deseja realizar este estudo:")
     print("\nAgora, preciso que você insira a quantidade de meses que você deseja considerar e as vendas deste produto para cada um desses meses.")
     tempo_meses = int(input("\nDigite quantos meses devem ser considerados: "))
     print("\nInsira abaixo a quantidade de vendas para cada mês:\n")
+    # Solicitando um input para o tanto de meses que o usuário escolheu:
     for i in range(1, tempo_meses+1, 1):
         num_vendas = int(input(f"{i}° Mês: "))
         somatoria += num_vendas
+    # Calculando a média aritimética para ser usada como previsão de demanda:
     media = somatoria / tempo_meses
     print(f"\nTendo em vista a quantidade de vendas nos últimos {tempo_meses} meses, espera-se que no próximo mês a demanda para {nome_produto} será de {media:.1f} unidades.")
 
@@ -26,12 +31,13 @@ def validade_produtos():
 
     if escolha.lower() == "todos":
         print("\nCerto, segue abaixo a lista dos seus produtos com a respectiva data de validade:\n")
+        # Realizando a exibição de cada item dentro do estoque:
         for i in range(0, len(estoque), 2):
             print(f"Nome do Produto: {estoque[i]}")
             print(f"Data de validade: {estoque[i+1]}\n")
     elif escolha.lower() == "específico" or escolha.lower() == "especifico":
         nome_produto = input("\nE qual é o nome do produto que você deseja consultar?\n")
-
+        # Realizando a busca do item dentro do estoque e exibindo a sua data de validade:
         for i in range(len(estoque)):
                 if nome_produto == estoque[i]:
                     print(f"\nA data de validade do produto escolhido é esta: {estoque[i+1]}.")
@@ -44,6 +50,7 @@ def tamanho_estoque():
         escolha = input("Desculpe, não entendi a sua resposta. Você quer saber o tamanho do estoque INTEIRO ou de um produto ESPECÍFICO?\n")
 
     if escolha.lower() == "inteiro":
+        # Realizando a somatoria dos produtos no estoque:
         for i in range(2, len(estoque), 3):
             quantidade += int(estoque[i])
 
@@ -52,6 +59,7 @@ def tamanho_estoque():
     elif escolha.lower() == "específico" or escolha.lower() == "especifico":
         nome_produto = input("\nE qual é o nome do produto que você deseja consultar?\n")
 
+        # Realizando a busca do produto desejado dentro do estoque e exibindo a sua quantidade:
         for i in range(len(estoque)):
                 if nome_produto == estoque[i]:
                     print(f"\nEste produto possui {estoque[i+2]} itens.")
@@ -62,6 +70,7 @@ def registrar_remover_produto():
     while  not escolha.lower() == "adicionar" and not escolha.lower() == "remover":
         print("Desculpe, mas não entendi a sua resposta. Você deseja ADICIONAR ou REMOVER um produto?")
         escolha = input()
+    # Pedindo as informações necessárias para se adicionar um produto ao estoque:
     if escolha.lower() == "adicionar":
         nome_produto = input("\nQual é nome do produto a ser adicionado?\n")
         estoque.append(nome_produto)
@@ -70,6 +79,7 @@ def registrar_remover_produto():
         while int(dia_validade) < 1 or int(dia_validade) > 31:
             print("\nO valor inserido é inválido, verifique-o e tente novamente.")
             dia_validade = input("\nDia: ")
+        # Adicionando um zero no inicio do número caso o usuário não o tenha inserido na digitação:
         if dia_validade[0] != "0":
             dia_validade = "0" + dia_validade
 
@@ -77,6 +87,7 @@ def registrar_remover_produto():
         while int(mes_validade) < 1 or int(mes_validade) > 12:
             print("\nO valor inserido é inválido, verifique-o e tente novamente.")
             mes_validade = input("Mês: ")
+        # Adicionando um zero no inicio do número caso o usuário não o tenha inserido na digitação:
         if mes_validade[0] != "0":
             mes_validade = "0" + mes_validade
 
@@ -98,12 +109,14 @@ def registrar_remover_produto():
 
     elif escolha.lower() == "remover":
         nome_produto = input("Qual é o nome do produto a ser removido do estoque?\n")
+        # Verificando se o produto não está no estoque e exibindo uma mensagem caso seja verdade:
         while not nome_produto in estoque:
             print("Parece que este produto não está no estoque, verifique o nome inserido e tente novamente.")
             nome_produto = input("Digite novamente o nome do produto ou escreva SAIR para encerrar esta opção: \n")
             if nome_produto.lower() == "sair":
                 break
         if not nome_produto == "sair":
+            # Procurando o produto dentro do estoque e realizando a sua remoção:
             for i in range(len(estoque)):
                 if nome_produto == estoque[i]:
                     estoque.pop(i+2)
@@ -116,6 +129,7 @@ def registrar_remover_produto():
 print("Seja bem-vindo ao seu assistente!")
 
 try:
+    # Delimitando 3 tentativas de acesso ao sistema (login):
     for i in range(1, 4, 1):
         nome_usuario = input("Digite o seu nome: ")
         senha_sistema = input("Digite a senha do sistema: ")
@@ -123,8 +137,10 @@ try:
         if i == 3 and not (nome_usuario in nome_usuario_salvo and senha_sistema == senha_sistema_salvo):
             raise ValueError
         else: 
+            # Exibindo uma mensagem de erro caso o nome e a senha não sejam encontradas no sistema:
             if not (nome_usuario in nome_usuario_salvo and senha_sistema == senha_sistema_salvo):
                 print("Seu nome ou a senha do sistema está incorreto. Tente novamente.")
+            # Quebrando o loop caso não ocorra problemas de verificação do nome e senha:
             else:
                 break
 
@@ -132,13 +148,14 @@ try:
     print(f"\nOlá, {nome_usuario}.")
     while continuar == "sim":
         print("\nComo posso ajudá-lo?")
+        # Exibindo as opções de funcionalidades do sistema:
         print("\n1-Quero fazer uma previsão de demanda\n2-Quero acessar a validade dos meus produtos\n3-Quero saber o tamanho do meu estoque\n4-Quero registrar um novo produto ou remover um produto do estoque\n")
         escolha = int(input())
 
         while not (escolha == 1 or escolha == 2 or escolha == 3 or escolha == 4):
             print("Você selecionou uma opção inexistente. Tente de novo.")
             escolha = int(input())
-
+        # Chamando a função de cada funcionalidade de acordo com a escolha do usuário:
         if escolha == 1:
             continuar = "não"
             previsao_demanda()
@@ -155,9 +172,10 @@ try:
         elif escolha == 4:
             continuar = "não"
             registrar_remover_produto()
-
+        # Perguntando ao usuário se ele deseja continuar ou não usando o sistema:
         continuar = input("\nEspero ter ajudado. Você deseja o meu auxílio em mais alguma coisa? (Sim/Não)\n")
 
     print("Certo, volte quando quiser!")
+# Bloqueando o acesso (encerrando o programa) do usuário caso as tentativas de login se esgotarem:
 except ValueError:
     print("Seu acesso foi bloqueado. Consulte o gerente para resolver este problema.")
